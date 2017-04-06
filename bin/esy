@@ -126,8 +126,7 @@ elif [ "$1" == "build" ]; then
 
 elif [ "$1" == "shell" ]; then
   ensureEnvEjected
-  source "$ENV_PATH"
-  $SHELL
+  ENV="$ENV_PATH" PS1="esy % " sh
 
 elif [ "$1" == "install" ] || [ "$1" == "add" ]; then
   builtInYarn $@
