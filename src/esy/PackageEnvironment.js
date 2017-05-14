@@ -436,16 +436,18 @@ function calculateEnvironment(
       let depManPath = dependencies
         .map(dep => targetPath(sandbox, dep, '_install', 'man'))
         .join(':');
-      sandboxExportedEnvVars = Object.assign(sandboxExportedEnvVars, {
-        'PATH': {
-          val: `${depPath}:$PATH`,
-          exclusive: false,
-        },
-        'MAN_PATH': {
-          val: `${depManPath}:$MAN_PATH`,
-          exclusive: false,
-        }
-      });
+      if (!packageInfo.esy.__noEsyConfigPresent) {
+        sandboxExportedEnvVars = Object.assign(sandboxExportedEnvVars, {
+          'PATH': {
+            val: `${depPath}:$PATH`,
+            exclusive: false,
+          },
+          'MAN_PATH': {
+            val: `${depManPath}:$MAN_PATH`,
+            exclusive: false,
+          }
+        });
+      }
     }
 
     envConfigState = addEnvConfigForPackage(
