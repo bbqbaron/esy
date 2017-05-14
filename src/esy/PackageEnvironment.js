@@ -428,15 +428,15 @@ function calculateEnvironment(
       },
     };
 
-    let dependencies = collectTransitiveDependencies(packageInfo);
-    if (dependencies.length > 0) {
-      let depPath = dependencies
-        .map(dep => targetPath(sandbox, dep, '_install', 'bin'))
-        .join(':');
-      let depManPath = dependencies
-        .map(dep => targetPath(sandbox, dep, '_install', 'man'))
-        .join(':');
-      if (!packageInfo.esy.__noEsyConfigPresent) {
+    if (!packageInfo.esy.__noEsyConfigPresent) {
+      let dependencies = collectTransitiveDependencies(packageInfo);
+      if (dependencies.length > 0) {
+        let depPath = dependencies
+          .map(dep => targetPath(sandbox, dep, '_install', 'bin'))
+          .join(':');
+        let depManPath = dependencies
+          .map(dep => targetPath(sandbox, dep, '_install', 'man'))
+          .join(':');
         sandboxExportedEnvVars = Object.assign(sandboxExportedEnvVars, {
           'PATH': {
             val: `${depPath}:$PATH`,
