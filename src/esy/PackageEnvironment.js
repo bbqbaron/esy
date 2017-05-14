@@ -428,26 +428,25 @@ function calculateEnvironment(
       },
     };
 
-    if (!packageInfo.esy.__noEsyConfigPresent) {
-      let dependencies = collectTransitiveDependencies(packageInfo);
-      if (dependencies.length > 0) {
-        let depPath = dependencies
-          .map(dep => targetPath(sandbox, dep, '_install', 'bin'))
-          .join(':');
-        let depManPath = dependencies
-          .map(dep => targetPath(sandbox, dep, '_install', 'man'))
-          .join(':');
-        sandboxExportedEnvVars = Object.assign(sandboxExportedEnvVars, {
-          'PATH': {
-            val: `${depPath}:$PATH`,
-            exclusive: false,
-          },
-          'MAN_PATH': {
-            val: `${depManPath}:$MAN_PATH`,
-            exclusive: false,
-          }
-        });
-      }
+    let dependencies = collectTransitiveDependencies(packageInfo)
+      .filter(({ esy }) => !esy.__noEsyConfigPresent);
+    if (dependencies.length > 0) {
+      let depPath = dependencies
+        .map(dep => targetPath(sandbox, dep, '_install', 'bin'))
+        .join(':');
+      let depManPath = dependencies
+        .map(dep => targetPath(sandbox, dep, '_install', 'man'))
+        .join(':');
+      sandboxExportedEnvVars = Object.assign(sandboxExportedEnvVars, {
+        'PATH': {
+          val: `${depPath}:$PATH`,
+          exclusive: false,
+        },
+        'MAN_PATH': {
+          val: `${depManPath}:$MAN_PATH`,
+          exclusive: false,
+        }
+      });
     }
 
     envConfigState = addEnvConfigForPackage(
